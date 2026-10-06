@@ -1,0 +1,23 @@
+mission:
+  mode: defensive_observation
+  human_review_required: true
+  target_scope: accessible_external_objects
+  internal_body_search: false
+  autonomous_enforcement: false
+navigation:
+  ros2: true
+  nav2: true
+  gps_denied_localization: true
+  planner: safe_local_planner
+perception:
+  rgbd: true
+  lidar: true
+  thermal: optional
+  nir: optional
+  detector: YOLO
+  segmentation: SAM3
+  reasoning: Qwen3-VL
+safety:
+  physical_estop_required: true
+  deterministic_gate_required: true
+  foundation_model_motor_authority: false
