@@ -7,7 +7,7 @@ name = 'multimodal-narcotics-screening-robot'
 version = '0.1.0'
 description = 'Defensive multimodal screening and safe robotics platform'
 requires-python = '>=3.10'
-dependencies = []
+dependencies = [\n  'numpy>=1.26',\n  'ultralytics>=8.4.0',\n  'huggingface-hub>=0.34.0',\n]
 
 [project.optional-dependencies]
 dev = ['pytest>=8']
