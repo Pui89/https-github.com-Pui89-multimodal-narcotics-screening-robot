@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://github.com/Pui89/multimodal-narcotics-screening-robot/blob/main/schemas/review_record.schema.json",
+  "title":"Human Review Record","type":"object",
+  "required":["event_id","decision","reviewer","rationale","timestamp","evidence_digest"],
+  "properties":{"event_id":{"type":"string","minLength":1},"decision":{"enum":["ACCEPT","REJECT","UNKNOWN","REQUEST_MORE_DATA"]},
+  "reviewer":{"type":"string","minLength":1},"rationale":{"type":"string","minLength":1},"timestamp":{"type":"string"},
+  "evidence_digest":{"type":"string","pattern":"^[a-fA-F0-9]{64}$"}},"additionalProperties":false
+}
