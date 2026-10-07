@@ -1,0 +1,16 @@
+{
+  "registry_version": "1.0",
+  "records": [
+    {
+      "model_id": "example-review-model",
+      "version": "0.0.0-example",
+      "status": "EXAMPLE_ONLY",
+      "source": "documented local artifact",
+      "sha256": "REPLACE_WITH_MEASURED_SHA256",
+      "inputs": ["rgb", "depth"],
+      "output": "screening_hypothesis",
+      "dataset_version": "example",
+      "limitations": ["not chemical identification", "requires human review"]
+    }
+  ]
+}
