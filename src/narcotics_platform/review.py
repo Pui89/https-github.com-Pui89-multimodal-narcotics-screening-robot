@@ -1,8 +1,8 @@
 """Human-review decision primitives."""
 from __future__ import annotations
 from dataclasses import dataclass
-from enum import StrEnum
-class ReviewDecision(StrEnum):
+from enum import Enum
+class ReviewDecision(str, Enum):
     ACCEPT="ACCEPT"; REJECT="REJECT"; UNKNOWN="UNKNOWN"; REQUEST_MORE_DATA="REQUEST_MORE_DATA"
 @dataclass(frozen=True)
 class ReviewRecord:
