@@ -470,3 +470,20 @@ Third-party models, datasets, SDKs, and dependencies may have separate licenses 
 **GitHub:** [Pui89](https://github.com/Pui89)
 
 For project issues, feature requests, implementation discussions, and reproducibility questions, use the repository's GitHub Issues and Discussions where available.
+
+## Platform v1.0 Engineering Layer
+
+This release adds a production-oriented engineering layer without expanding the unsafe capability boundary:
+
+- runtime monitoring for latency, dropped frames, sensor health, synchronization drift, OOD and abstention
+- bounded temporal evidence accumulation and covariance-aware 3D evidence quality
+- explicit human-review records: ACCEPT / REJECT / UNKNOWN / REQUEST_MORE_DATA
+- model lifecycle governance: candidate → validation → calibration → safety review → approved → deployed → monitored → retired
+- reproducible experiment metadata and robustness stress scenarios
+- framework-neutral service contract for `/screen`, `/health`, `/metrics`, `/models`, `/events/{id}`, and `/review`
+- digital-twin and operator-interface contracts
+- tagged release workflow with SHA-256 checksums, SPDX SBOM and GitHub artifact attestations
+
+See [Platform v1.0](docs/PLATFORM_V1.md), [API Contract](docs/API_CONTRACT.md), [Research Tracking](docs/RESEARCH_TRACKING.md), [Digital Twin](docs/DIGITAL_TWIN.md), [Operator UI](docs/OPERATOR_UI.md), and [Secure Release Flow](docs/SECURE_RELEASE_FLOW.md).
+
+Artifact attestations establish build provenance and can carry SBOMs; published artifacts should be verified before deployment.
