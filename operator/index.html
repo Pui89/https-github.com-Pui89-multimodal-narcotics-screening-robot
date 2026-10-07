@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Screening Operator Console</title>
+<style>body{font-family:system-ui,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}main{max-width:1100px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}.ok{font-weight:700}.actions button{margin:6px;padding:10px 14px;border:0;border-radius:8px;cursor:pointer}</style>
+</head>
+<body><main><h1>Multimodal Screening Operator Console</h1>
+<p>Review-first prototype. No actuator controls are exposed.</p>
+<section class="grid">
+<div class="card"><h2>Sensor Health</h2><p id="sensor">Nominal / awaiting telemetry</p></div>
+<div class="card"><h2>Uncertainty</h2><p id="uncertainty">Awaiting evidence</p></div>
+<div class="card"><h2>Safety Gate</h2><p class="ok">DETERMINISTIC / AUTHORITATIVE</p></div>
+<div class="card"><h2>Review Queue</h2><p id="queue">0 events</p></div>
+</section>
+<section class="card" style="margin-top:14px"><h2>Human Review</h2><div class="actions">
+<button onclick="review('ACCEPT')">ACCEPT</button><button onclick="review('REJECT')">REJECT</button><button onclick="review('UNKNOWN')">UNKNOWN</button><button onclick="review('REQUEST_MORE_DATA')">REQUEST MORE DATA</button></div><pre id="log">No review action recorded.</pre></section>
+<script>function review(v){document.getElementById('log').textContent='Review decision: '+v+'\nRecorded locally as a UI prototype. Connect only to an authorized review API.'}</script>
+</main></body></html>
