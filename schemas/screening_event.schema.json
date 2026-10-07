@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Pui89/multimodal-narcotics-screening-robot/schemas/screening_event.schema.json",
+  "title": "Screening Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "timestamp", "dataset_version", "modalities", "label", "provenance"],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "dataset_version": {"type": "string"},
+    "modalities": {"type": "array", "items": {"enum": ["rgb","depth","thermal","nir","lidar","imu"]}},
+    "label": {"enum": ["amphetamine","heroin","methamphetamine_crystal","narcotic_unknown","unknown_substance","non_target","unlabeled"]},
+    "bbox_2d": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+    "geometry_3d": {"type": "object", "additionalProperties": true},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "review_status": {"enum": ["unreviewed","human_review","accepted","rejected","unknown"]},
+    "model_version": {"type": "string"},
+    "calibration_id": {"type": "string"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type"],
+      "properties": {
+        "source_type": {"enum": ["authorized_recording","simulation","synthetic","other_authorized"]},
+        "source_id": {"type": "string"},
+        "privacy_retention": {"enum": ["minimized","restricted","expired","not_applicable"]}
+      }
+    }
+  }
+}
