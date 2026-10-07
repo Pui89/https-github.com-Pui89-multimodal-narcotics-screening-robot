@@ -55,3 +55,269 @@ See [Pipeline Overview](docs/PIPELINE_OVERVIEW.md) for the full safety-first wor
 
 > Safety note: screening outputs are hypotheses for authorized human review. They are not proof of chemical identity, and foundation models do not directly control robot motors.
 
+
+## News
+
+Project updates, releases, architecture changes, evaluation milestones, and safety-related changes will be documented in Git history and release notes. No experimental result is presented as validated until it has been reproduced and documented.
+
+## Online API
+
+**Status: Prototype / planned interface**
+
+The intended API will expose screening and evidence-processing services without providing direct actuator control.
+
+Example conceptual request:
+
+~~~json
+{
+  "request_id": "example-001",
+  "modalities": ["rgb", "depth", "thermal", "lidar"],
+  "mode": "screening"
+}
+~~~
+
+Example conceptual response:
+
+~~~json
+{
+  "screening_hypothesis": "unknown_substance",
+  "confidence": 0.0,
+  "uncertainty": 0.0,
+  "decision": "HUMAN_REVIEW",
+  "evidence_provenance": {}
+}
+~~~
+
+Values above are interface examples only, not measured results.
+
+## Online App
+
+**Status: Prototype / planned**
+
+The planned web interface will provide:
+
+- live sensor status
+- synchronized RGB/depth/thermal/LiDAR views
+- 3D evidence visualization
+- uncertainty and OOD indicators
+- screening history and audit trail
+- human-review workflow
+- robot telemetry
+- safety-state and emergency-stop status
+
+The application will not expose unrestricted AI-to-motor control.
+
+## System Overview
+
+~~~text
+Sensors
+  │
+  ├── RGB / RGB-D
+  ├── Thermal / NIR
+  ├── LiDAR
+  └── IMU
+       │
+       ▼
+Sensor Synchronization + Quality Gate
+       │
+       ▼
+Detection / Segmentation / Tracking
+       │
+       ▼
+3D Evidence Fusion
+       │
+       ├──────────────► SLAM / Local Map ─► Planner
+       │                                  │
+       ▼                                  ▼
+Open-Set / Anomaly Screening       Deterministic Safety Gate
+       │                                  │
+       ▼                                  ▼
+Multimodal Reasoning                  ROS 2 Controller
+       │
+       ▼
+Uncertainty / OOD Calibration
+       │
+       ▼
+Human Review
+       │
+       ▼
+Audit / Evidence Record
+~~~
+
+Foundation models remain advisory components and are isolated from direct actuator control.
+
+## Model Variants and Input Specifications
+
+The repository is designed to support modular model variants rather than requiring a single model.
+
+| Variant | Primary inputs | Purpose | Status |
+|---|---|---|---|
+| RGB | RGB image | baseline visual perception | Prototype |
+| RGB-D | RGB + depth | object geometry and localization | Prototype |
+| Thermal/NIR | thermal/NIR | complementary spectral evidence | Planned |
+| LiDAR | point cloud | 3D geometry and mapping | Prototype |
+| Multimodal | RGB-D + thermal/NIR + LiDAR | evidence fusion | Prototype |
+| Temporal | sequential multimodal observations | temporal evidence | Planned |
+| Open-set | multimodal + OOD features | unknown handling | Prototype |
+| Review model | multimodal evidence | human-review assistance | Prototype |
+
+Input specifications should be treated as hardware/configuration dependent. Sensor calibration, synchronization, resolution, frame rate, field of view, and preprocessing must be recorded for each deployment.
+
+## Model Architecture
+
+The architecture separates perception, evidence fusion, reasoning, uncertainty estimation, and robot control:
+
+~~~text
+RGB/RGB-D ───────┐
+Thermal/NIR ─────┤
+LiDAR ───────────┤
+IMU ─────────────┘
+        │
+        ▼
+Quality Gate
+        │
+        ▼
+Perception
+(detection / segmentation / tracking)
+        │
+        ▼
+Multimodal Evidence Fusion
+        │
+        ├──► Open-Set / OOD
+        ├──► Temporal Representation
+        └──► 3D Evidence Map
+        │
+        ▼
+Reasoning / Evidence Summary
+        │
+        ▼
+Uncertainty Calibration
+        │
+        ▼
+Human Review
+        │
+        ▼
+Audit Record
+
+Navigation:
+LiDAR + Depth + IMU
+        │
+        ▼
+SLAM → Local Map → Planner
+        │
+        ▼
+Deterministic Safety Gate
+        │
+        ▼
+ROS 2 Controller
+~~~
+
+## Recommended Workflow
+
+1. Calibrate and synchronize available sensors.
+2. Validate sensor health and quality.
+3. Acquire accessible external-object/environment observations.
+4. Run perception and tracking.
+5. Fuse spatial and multimodal evidence.
+6. Evaluate unknown/OOD status.
+7. Generate an uncertainty-aware screening hypothesis.
+8. Send consequential cases to authorized human review.
+9. Record evidence provenance and reviewer outcome.
+10. Run navigation only through deterministic safety controls.
+11. Review failures before deploying a new model version.
+
+## Local Deployment
+
+### Requirements
+
+- Python 3.x
+- ROS 2 for robotics integration
+- compatible RGB/RGB-D, thermal/NIR, LiDAR and/or IMU hardware as configured
+- optional GPU for deep-learning inference
+
+### Install
+
+~~~bash
+python -m pip install -e '.[dev]'
+pytest -q
+~~~
+
+### Development principle
+
+Start with recorded/simulated sensor data, validate perception and safety gates, then connect hardware incrementally. Never connect an unvalidated foundation model directly to actuators.
+
+## Full 2K-Workflow
+
+**2K refers to the target high-resolution visual processing workflow and should not be interpreted as a guaranteed camera input specification.**
+
+~~~text
+2K RGB acquisition
+      │
+      ▼
+Quality check + synchronization
+      │
+      ▼
+Resize / crop / preprocessing
+      │
+      ▼
+Detection + segmentation
+      │
+      ▼
+Depth / thermal / LiDAR alignment
+      │
+      ▼
+3D evidence fusion
+      │
+      ▼
+Open-set + uncertainty analysis
+      │
+      ▼
+Human review
+      │
+      ▼
+Audit / export
+~~~
+
+Actual supported resolution depends on the camera, compute hardware, memory budget, and configured inference pipeline.
+
+## Prompting Guidance
+
+Foundation models should be prompted as **evidence-review assistants**, not as autonomous chemical identifiers or robot controllers.
+
+Recommended structure:
+
+~~~text
+ROLE:
+You are an evidence-review assistant.
+
+INPUT:
+Describe only the supplied sensor observations and metadata.
+
+TASK:
+1. Summarize observable evidence.
+2. Identify missing or degraded modalities.
+3. Identify contradictions between modalities.
+4. State uncertainty.
+5. Preserve UNKNOWN when evidence is insufficient.
+6. Recommend HUMAN_REVIEW when the evidence is consequential or ambiguous.
+
+CONSTRAINTS:
+Do not claim chemical identity from visual evidence alone.
+Do not infer ingestion or internal-body presence.
+Do not issue actuator commands.
+Do not convert uncertainty into certainty.
+~~~
+
+Prompts and model outputs must remain subordinate to deterministic safety controls and human review.
+
+## License
+
+This project is released under the **MIT License**. See [LICENSE](LICENSE).
+
+Third-party models, datasets, SDKs, and dependencies may have separate licenses and terms. Users are responsible for complying with those terms.
+
+## Contact Us
+
+**GitHub:** [Pui89](https://github.com/Pui89)
+
+For project issues, feature requests, implementation discussions, and reproducibility questions, use the repository's GitHub Issues and Discussions where available.
