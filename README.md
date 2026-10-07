@@ -418,6 +418,47 @@ See `docs/EVALUATION.md`, `docs/ROBUSTNESS.md`, `docs/SENSOR_FAILURE.md`, `docs/
 When confidence is insufficient, modalities disagree, sensors are degraded, or an observation is outside the configured screening envelope, the platform can abstain and require human review. Missing modalities are recorded as missing evidence rather than treated as negative evidence.
 
 These improvements do not change the project's core limitation: visual/multimodal AI is a screening aid and cannot establish chemical identity, diagnose ingestion/internal-body presence, or authorize enforcement actions.
+
+## Production Hardening
+
+The project now includes additional engineering controls for secure, reproducible development:
+
+- GitHub Actions dependency review and CodeQL workflows.
+- Dependabot configuration for Python and GitHub Actions dependencies.
+- CODEOWNERS coverage for source, evaluation, schemas, simulation and workflow infrastructure.
+- Repository credential-pattern checks in CI.
+- Versioned dataset/event schema in `schemas/screening_event.schema.json`.
+- Dataset and annotation guidance in `docs/DATASET_AND_ANNOTATION.md`.
+- Reproducible JSONL evaluation runner in `evaluation/run_evaluation.py`.
+- Controlled robustness benchmark scenarios in `docs/ROBUSTNESS_BENCHMARK.md`.
+- Dry-run robotics boundary in `simulation/`; it records navigation intent and does not issue actuator commands.
+- Example model registry record in `config/model_registry.example.json`.
+- Read-only, no-new-privileges Docker examples for development/evaluation services.
+
+GitHub's dependency-review and secure-workflow guidance supports reviewing dependency changes, restricting workflow permissions, and using CodeQL for code scanning. These controls are configured as repository workflows rather than claims that the project is already certified or production-approved.
+
+## Engineering Maturity
+
+```text
+Dataset Schema ──► Reproducible Evaluation ──► Calibration / OOD
+       │                    │                         │
+       ▼                    ▼                         ▼
+ Provenance            Metrics / Reports       Safe Abstention
+       │                    │                         │
+       └──────────────► Human Review ◄───────────────┘
+                              │
+                              ▼
+                    Evidence / Audit Record
+                              │
+                              ▼
+                 Deterministic Safety Gate
+                              │
+                              ▼
+                         ROS 2 / Robot
+```
+
+Hardware deployment remains conditional on independent validation of the sensing stack, safety controls, emergency-stop path, operating environment, and applicable authorization.
+
 ## License
 
 This project is released under the **MIT License**. See [LICENSE](LICENSE).
