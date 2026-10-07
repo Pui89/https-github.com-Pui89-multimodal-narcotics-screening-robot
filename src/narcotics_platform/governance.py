@@ -1,8 +1,8 @@
 """Model lifecycle governance state machine."""
 from __future__ import annotations
 from dataclasses import dataclass
-from enum import StrEnum
-class ModelStage(StrEnum):
+from enum import Enum
+class ModelStage(str, Enum):
     CANDIDATE="CANDIDATE"; VALIDATION="VALIDATION"; CALIBRATION="CALIBRATION"
     SAFETY_REVIEW="SAFETY_REVIEW"; APPROVED="APPROVED"; DEPLOYED="DEPLOYED"
     MONITORED="MONITORED"; RETIRED="RETIRED"
