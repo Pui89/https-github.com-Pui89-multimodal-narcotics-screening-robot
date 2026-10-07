@@ -55,37 +55,3 @@ See [Pipeline Overview](docs/PIPELINE_OVERVIEW.md) for the full safety-first wor
 
 > Safety note: screening outputs are hypotheses for authorized human review. They are not proof of chemical identity, and foundation models do not directly control robot motors.
 
-
-## PhD Research Program
-
-**Proposed research direction:** *Uncertainty-Aware Multimodal Robotic Screening and Open-Set Anomaly Detection*
-
-This repository is being developed as a research prototype suitable for discussion with PhD supervisors in AI, robotics, computer vision, multimodal learning, and trustworthy autonomy.
-
-### Research question
-
-Can uncertainty-aware multimodal sensor fusion improve screening robustness under sensor degradation, environmental domain shift, and previously unseen observations compared with single-modality and naive-fusion baselines?
-
-### Expected research contributions
-
-1. Multimodal RGB/thermal-NIR/depth/LiDAR evidence fusion.
-2. Adaptive fusion under missing or degraded sensors.
-3. Explicit open-set recognition and unknown/abstain states.
-4. Calibrated uncertainty and selective prediction.
-5. Temporal/4D evidence integration.
-6. Safety-constrained separation between AI reasoning and robot actuation.
-7. Reproducible benchmark and ablation protocol.
-
-### Supervisor-ready evidence package
-
-- [Research hypotheses](docs/RESEARCH_HYPOTHESES.md)
-- [PhD-level experiment plan](docs/EXPERIMENT_PLAN.md)
-- [Multimodal fusion method](docs/MULTIMODAL_FUSION.md)
-- [Uncertainty and open-set design](docs/UNCERTAINTY_AND_OPEN_SET.md)
-- [Safety invariants](docs/SAFETY_INVARIANTS.md)
-- [Threat model](docs/THREAT_MODEL.md)
-- [Reproducibility protocol](docs/REPRODUCIBILITY.md)
-- [Pipeline overview](docs/PIPELINE_OVERVIEW.md)
-- [AI architecture](docs/AI_ARCHITECTURE.md)
-
-**Important:** the repository currently defines a research hypothesis and evaluation framework; it does not claim experimental superiority until experiments are actually run and independently reproducible. Screening outputs are hypotheses, not chemical proof.
