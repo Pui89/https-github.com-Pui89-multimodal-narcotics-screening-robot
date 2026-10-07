@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+      - name: Build distributions
+        run: python -m build
+      - name: Generate checksums
+        shell: bash
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS
+      - name: Generate SPDX SBOM
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib
+          root=pathlib.Path("dist")
+          packages=[]
+          for p in sorted(root.iterdir()):
+              if p.is_file() and p.name != "sbom.spdx.json":
+                  packages.append({"SPDXID":"SPDXRef-"+hashlib.sha256(p.name.encode()).hexdigest()[:16],"name":p.name,"downloadLocation":"NOASSERTION","checksums":[{"algorithm":"SHA256","checksumValue":hashlib.sha256(p.read_bytes()).hexdigest()}]})
+          sbom={"spdxVersion":"SPDX-2.3","dataLicense":"CC0-1.0","SPDXID":"SPDXRef-DOCUMENT","name":"multimodal-narcotics-screening-robot-release","documentNamespace":"https://github.com/Pui89/multimodal-narcotics-screening-robot/spdx","creationInfo":{"created":"RELEASE_WORKFLOW","creators":["Tool: GitHub Actions"]},"packages":packages}
+          (root/"sbom.spdx.json").write_text(json.dumps(sbom,indent=2)+"\n")
+          PY
+      - name: Attest distributions
+        uses: actions/attest@v4
+        with:
+          subject-path: "dist/*.whl,dist/*.tar.gz"
+      - name: Attest SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: "dist/SHA256SUMS"
+          sbom-path: "dist/sbom.spdx.json"
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.ref_name }}
+          path: dist/*
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/* --generate-notes --title "${{ github.ref_name }}"
