@@ -397,6 +397,27 @@ Do not convert uncertainty into certainty.
 
 Prompts and model outputs must remain subordinate to deterministic safety controls and human review.
 
+## Production-Quality Platform Layer
+
+The repository now includes a deterministic baseline for multimodal evidence fusion, sensor-quality gating, open-set abstention, uncertainty estimation, and audit-oriented evidence graphs. These components are deliberately model-agnostic so validated perception models can be upgraded without changing the safety boundary.
+
+### New capabilities
+- Multimodal evidence fusion with cross-modal agreement and contradiction signals.
+- Sensor health, synchronization and degraded-modality handling.
+- Open-set screening with explicit UNKNOWN/ABSTAIN behavior.
+- Uncertainty estimation that incorporates confidence, modality agreement, sensor quality and OOD score.
+- Evidence graph with SHA-256 integrity digest for audit records.
+- Reproducible evaluation metrics including classification metrics and expected calibration error.
+- Robustness and sensor-failure evaluation guidance.
+- Static evaluation dashboard at `dashboard/index.html` with no actuator authority.
+
+### Evaluation and evidence
+See `docs/EVALUATION.md`, `docs/ROBUSTNESS.md`, `docs/SENSOR_FAILURE.md`, `docs/EVIDENCE_GRAPH.md`, `docs/MODEL_REGISTRY.md`, and `docs/DASHBOARD.md`.
+
+### Safety behavior
+When confidence is insufficient, modalities disagree, sensors are degraded, or an observation is outside the configured screening envelope, the platform can abstain and require human review. Missing modalities are recorded as missing evidence rather than treated as negative evidence.
+
+These improvements do not change the project's core limitation: visual/multimodal AI is a screening aid and cannot establish chemical identity, diagnose ingestion/internal-body presence, or authorize enforcement actions.
 ## License
 
 This project is released under the **MIT License**. See [LICENSE](LICENSE).
