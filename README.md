@@ -228,23 +228,110 @@ ROS 2 Controller
 
 ## Local Deployment
 
+**Status: Local development / prototype deployment**
+
+The recommended deployment path is to validate the screening pipeline with recorded or simulated sensor data first, then add sensors and robotics interfaces incrementally. Screening outputs remain hypotheses for authorized human review and are never treated as proof of chemical identity.
+
 ### Requirements
 
 - Python 3.x
-- ROS 2 for robotics integration
+- Git
+- project dependencies from `pyproject.toml`
+- ROS 2 for optional robotics integration
 - compatible RGB/RGB-D, thermal/NIR, LiDAR and/or IMU hardware as configured
-- optional GPU for deep-learning inference
+- optional NVIDIA GPU for deep-learning inference
+- optional simulator such as Isaac Sim/Isaac Lab for robotics testing
 
-### Install
+### Clone and install
 
 ~~~bash
+git clone https://github.com/Pui89/multimodal-narcotics-screening-robot.git
+cd multimodal-narcotics-screening-robot
+
+python -m venv .venv
+source .venv/bin/activate
+# Windows PowerShell:
+# .venv\\Scripts\\Activate.ps1
+
+python -m pip install --upgrade pip
 python -m pip install -e '.[dev]'
+~~~
+
+### Validate the local environment
+
+~~~bash
+python --version
+python -m pip check
 pytest -q
 ~~~
 
+### Recommended deployment sequence
+
+~~~text
+Recorded / simulated data
+        │
+        ▼
+Environment + dependency validation
+        │
+        ▼
+Sensor calibration / synchronization
+        │
+        ▼
+Perception + tracking
+        │
+        ▼
+Multimodal evidence fusion
+        │
+        ▼
+Open-set / uncertainty checks
+        │
+        ▼
+Human review + audit record
+        │
+        ▼
+Optional ROS 2 / navigation integration
+        │
+        ▼
+Deterministic safety gate
+~~~
+
+### Sensor deployment
+
+For each deployment, record:
+
+- camera/depth/thermal/NIR/LiDAR/IMU model and configuration
+- resolution, frame rate, field of view and operating range
+- intrinsic/extrinsic calibration
+- timestamp synchronization method
+- preprocessing and model version
+- sensor-health status and missing modalities
+- evidence provenance and reviewer outcome
+
+### Robotics integration
+
+ROS 2 integration should be enabled only after the perception and safety pipeline has been validated. Navigation and motion remain separate from multimodal reasoning:
+
+~~~text
+Sensors → Perception → Evidence Map → Reasoning
+                                      │
+                                      ▼
+                               Human Review
+                                      │
+LiDAR + Depth + IMU → SLAM → Planner → Safety Gate → ROS 2
+~~~
+
+Foundation models must not directly command motors, cutters, manipulators, or other actuators. Emergency-stop and deterministic safety controls remain authoritative.
+
+### Troubleshooting
+
+- If editable installation fails, confirm Python version and that `pyproject.toml` is present.
+- If tests fail, resolve dependency/environment issues before connecting physical hardware.
+- If a sensor stream is missing or degraded, preserve the observation as unknown rather than forcing a screening classification.
+- If ROS 2 is unavailable, continue development with recorded/simulated data rather than bypassing the safety/control boundary.
+
 ### Development principle
 
-Start with recorded/simulated sensor data, validate perception and safety gates, then connect hardware incrementally. Never connect an unvalidated foundation model directly to actuators.
+Start with recorded/simulated sensor data, validate perception, uncertainty handling and safety gates, then connect hardware incrementally. Never connect an unvalidated foundation model directly to actuators.
 
 ## Full 2K-Workflow
 
