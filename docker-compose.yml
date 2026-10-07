@@ -1,0 +1,14 @@
+services:
+  screening:
+    build: .
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    command: ["python", "-c", "print('Screening service dry-run container')"]
+
+  evaluation:
+    build: .
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    command: ["python", "-c", "print('Evaluation service ready')"]
