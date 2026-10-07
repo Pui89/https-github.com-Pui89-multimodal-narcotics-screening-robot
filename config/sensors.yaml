@@ -1,0 +1,11 @@
+sensors:
+  rgb: true
+  rgbd: true
+  thermal: optional
+  nir: optional
+  lidar: optional
+  imu: optional
+evidence:
+  synchronize_timestamps: true
+  retain_sensor_provenance: true
+  retain_calibration_id: true

@@ -1,0 +1,15 @@
+navigation:
+  framework: ROS2
+  planner: Nav2
+  localization:
+    gps_required: false
+    sensors: [lidar, depth, imu]
+  trajectory_tracking: MPC
+  safety:
+    minimum_obstacle_distance_m: 0.50
+    minimum_localization_confidence: 0.70
+    human_exclusion_zone_m: 1.00
+    emergency_stop: true
+  motor_authority:
+    foundation_models: false
+    deterministic_gate_required: true

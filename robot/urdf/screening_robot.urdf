@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot name="screening_ai_robot">
+  <link name="base_link"/>
+  <link name="base_footprint"/>
+  <joint name="base_fixed" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+  <link name="sensor mast"/>
+  <joint name="sensor_mast_fixed" type="fixed">
+    <parent link="base_link"/>
+    <child link="sensor_mast"/>
+    <origin xyz="0 0 0.65"/>
+  </joint>
+</robot>

@@ -1,0 +1,27 @@
+platform:
+  name: multimodal_narcotics_screening_ai
+  mission: defensive_screening_and_human_review
+perception:
+  detector: YOLO
+  segmentation: SAM3
+  tracking: true
+  anomaly_detection: true
+  unknown_class_required: true
+  reasoning_primary: Qwen3-VL
+  reasoning_secondary: Gemma4-E4B-it
+sensors:
+  rgb: true
+  rgbd: true
+  thermal: optional
+  nir: optional
+  lidar: optional
+  imu: optional
+states: [SEARCHING, CANDIDATE, OCCLUDED, UNSEEN, UNKNOWN, SUSPECTED_SUBSTANCE, HUMAN_REVIEW, CLEARED, ESCALATE]
+safety:
+  human_confirmation_required: true
+  no_autonomous_seizure: true
+  no_autonomous_restraint: true
+  no_internal_body_diagnosis: true
+  no_direct_motor_control_from_foundation_models: true
+  emergency_stop: true
+  audit_logging: true
