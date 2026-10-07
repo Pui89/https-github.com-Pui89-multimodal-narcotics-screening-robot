@@ -37,3 +37,20 @@ pytest -q
 ## Ethics
 
 Use only lawful, authorized and proportionate screening. Minimize retained imagery, protect evidence access, log reviewer decisions, and avoid demographic or unrelated person identification.
+
+## 3D / 4D Robot Concept
+
+![3D/4D concept](docs/multimodal_narcotics_screening_robot_3d_4d_concept.svg)
+
+Realistic concept visualization of the mobile screening robot, sensor mast, screening target, multimodal sensor fusion and time-indexed 4D trajectory. The visualization is a design concept, not a claim of chemical identification capability.
+
+- [3D/4D concept image](docs/multimodal_narcotics_screening_robot_3d_4d_concept.svg)
+- [3D/4D video preview](docs/multimodal_narcotics_screening_robot_3d4d_preview.mp4)
+
+## Pipeline Overview
+
+**Sense → Quality Gate → Perceive → Track → 3D Evidence Fusion → Anomaly/Unknown Screening → Multimodal Reasoning → Uncertainty Calibration → Human Review → Audit → Safe Robot Navigation**
+
+See [Pipeline Overview](docs/PIPELINE_OVERVIEW.md) for the full safety-first workflow and [AI Architecture](docs/AI_ARCHITECTURE.md) for the multimodal system diagram.
+
+> Safety note: screening outputs are hypotheses for authorized human review. They are not proof of chemical identity, and foundation models do not directly control robot motors.
