@@ -1,0 +1,12 @@
+domain: security_inspection
+mission: multimodal_ai_inspection_and_screening
+primary_metrics:
+  perception: [precision, recall, f1]
+  multimodal: [cross_modal_agreement, contradiction_detection]
+  unknown: [ood_auroc, abstention_precision, selective_risk]
+  calibration: [ece, brier_score]
+  evidence: [provenance_completeness, hash_verification]
+  operations: [inspection_throughput_per_hour, latency_ms]
+  safety: [unsafe_action_rejection, review_routing_accuracy]
+scenarios: [normal, low_light, occlusion, blur, sensor_dropout, calibration_error, contradictory_modalities, ood, network_loss]
+unknown_policy: never_treat_visual_screening_as_chemical_proof; require_human_review
