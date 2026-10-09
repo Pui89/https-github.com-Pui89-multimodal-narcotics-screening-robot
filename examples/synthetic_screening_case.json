@@ -1,0 +1,14 @@
+{
+  "case_id": "synthetic-container-demo-001",
+  "subject_type": "object_or_container",
+  "minimum_modalities": 2,
+  "minimum_quality": 0.5,
+  "maximum_ood_score": 0.5,
+  "review_threshold": 0.65,
+  "maximum_score_disagreement": 0.45,
+  "observations": [
+    {"modality": "rgb", "screening_score": 0.78, "quality_score": 0.94, "ood_score": 0.08},
+    {"modality": "nir", "screening_score": 0.72, "quality_score": 0.88, "ood_score": 0.12},
+    {"modality": "thermal", "screening_score": 0.69, "quality_score": 0.83, "ood_score": 0.15}
+  ]
+}
