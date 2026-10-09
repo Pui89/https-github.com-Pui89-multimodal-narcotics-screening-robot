@@ -135,6 +135,24 @@ The input observations above are illustrative test data, not live sensor reading
 
 Implementation: [`src/pui89_e2e/pipeline.py`](src/pui89_e2e/pipeline.py). Tests: [`tests/test_e2e_pipeline.py`](tests/test_e2e_pipeline.py).
 
+## End-to-End Verification
+
+The pipeline includes an independent verification function for evidence integrity and safety invariants. It checks the evidence ID against the recorded payload, consistency between output and audit fields, valid confidence/status/counts, preservation of UNKNOWN on abstention, mandatory human review, and that robot motion remains unauthorized.
+
+```python
+from pui89_e2e import verify_pipeline_result
+
+report = verify_pipeline_result(result)
+if not report.valid:
+    print("Verification errors:", report.errors)
+```
+
+Run the automated suite with `pytest -q`. Verification tests include record tampering, attempted motion authorization, missing human review, and abstention checks.
+
+Full details: [End-to-End Verification](docs/E2E_VERIFICATION.md).
+
+**Security limitation:** the current evidence ID is an unkeyed digest for integrity consistency, not a cryptographic signature or proof of who created/reviewed a record. Passing software checks does not validate detection accuracy, chemical identity, or real-world robot safety.
+
 ## Ethics
 
 Use only lawful, authorized and proportionate screening. Minimize retained imagery, protect evidence access, log reviewer decisions, and avoid demographic or unrelated person identification.
