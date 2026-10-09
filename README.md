@@ -87,8 +87,13 @@ Navigation is separate: LiDAR/Depth/IMU -> SLAM/local map -> Nav2/planner/MPC ->
 
 ## Quick start
 
+```bash
 python -m pip install -e '.[dev]'
+python demo_end_to_end.py
 pytest -q
+```
+
+The demo uses synthetic, explicitly unknown observations to exercise quality gating, temporal alignment, human-review output and the audit record. It does not run a validated narcotics detector, identify chemical composition, or authorize robot motion. See [End-to-End Verification](docs/E2E_VERIFICATION.md).
 
 ## Executable End-to-End Baseline
 
