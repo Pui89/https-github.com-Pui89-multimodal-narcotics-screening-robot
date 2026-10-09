@@ -88,6 +88,53 @@ Navigation is separate: LiDAR/Depth/IMU -> SLAM/local map -> Nav2/planner/MPC ->
 python -m pip install -e '.[dev]'
 pytest -q
 
+## Executable End-to-End Baseline
+
+The repository now contains an executable **software-level end-to-end reference pipeline**:
+
+`normalized sensor observations → sensor-quality gate → temporal alignment → multimodal evidence aggregation → uncertainty/UNKNOWN abstention → mandatory human review → auditable evidence record`.
+
+This is an integrated reference workflow, not yet proof that every physical sensor, foundation model, ROS 2 node, or robot actuator is integrated into one validated hardware system.
+
+### Run it
+
+```bash
+python -m pip install -e '.[dev]'
+pytest -q
+```
+
+Example using recorded or simulated observations:
+
+```python
+from pui89_e2e import EndToEndScreeningPipeline, SensorObservation
+
+observations = [
+    SensorObservation(
+        sensor_id="camera-01",
+        modality="rgb",
+        timestamp="2026-10-09T10:00:00+00:00",
+        quality=0.92,
+        candidate_label="unknown_substance",
+        confidence=0.0,
+    ),
+    SensorObservation(
+        sensor_id="depth-01",
+        modality="depth",
+        timestamp="2026-10-09T10:00:00+00:00",
+        quality=0.95,
+        candidate_label="unknown_substance",
+        confidence=0.0,
+    ),
+]
+
+result = EndToEndScreeningPipeline().run(observations, case_id="demo-001")
+print(result.to_dict())
+```
+
+The input observations above are illustrative test data, not live sensor readings or a validated narcotics detection result. The pipeline rejects poor-quality or temporally misaligned evidence, preserves UNKNOWN when no supported hypothesis exists, produces a traceable evidence ID and audit record, and always requires human review. It **never authorizes robot motion** and does not identify chemical composition.
+
+Implementation: [`src/pui89_e2e/pipeline.py`](src/pui89_e2e/pipeline.py). Tests: [`tests/test_e2e_pipeline.py`](tests/test_e2e_pipeline.py).
+
 ## Ethics
 
 Use only lawful, authorized and proportionate screening. Minimize retained imagery, protect evidence access, log reviewer decisions, and avoid demographic or unrelated person identification.
