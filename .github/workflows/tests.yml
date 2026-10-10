@@ -25,7 +25,7 @@ jobs:
       - name: Test with coverage
         run: pytest -q --cov=src/narcotics_platform --cov=evaluation --cov-report=term-missing --cov-report=xml
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-python-${{ matrix.python-version }}
           path: coverage.xml
